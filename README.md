@@ -11,5 +11,5 @@ pip install -r requirements.txt  # install requirements
 
 ## Run
 ```bash
-python control-depth.py
+python control-depth-cvg.py
 ```

@@ -5,6 +5,8 @@ import numpy as np
 import torch
 from diffusers.utils import load_image
 
+checkpoint = "lllyasviel/control_v11f1p_sd15_depth"
+
 depth_estimator = pipeline('depth-estimation')
 
 image_file = 'room1_view3.png'
@@ -18,12 +20,12 @@ image = np.concatenate([image, image, image], axis=2)
 image = Image.fromarray(image)
 
 controlnet = ControlNetModel.from_pretrained(
-    "lllyasviel/sd-controlnet-depth", torch_dtype=torch.float16
+    checkpoint, torch_dtype=torch.float16
 )
 
 pipe = StableDiffusionControlNetPipeline.from_pretrained(
-    "dreamlike-art/dreamlike-photoreal-2.0", controlnet=controlnet, safety_checker=None, torch_dtype=torch.float16
-) # before runwayml/stable-diffusion-v1-5
+    "runwayml/stable-diffusion-v1-5", controlnet=controlnet, safety_checker=None, torch_dtype=torch.float16
+) # runwayml/stable-diffusion-v1-5 or dreamlike-art/dreamlike-photoreal-2.0
 
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
 
@@ -34,7 +36,7 @@ pipe.enable_xformers_memory_efficient_attention()
 
 pipe.enable_model_cpu_offload()
 
-image = pipe("A plant in a room", image, num_inference_steps=50).images[0]
+image = pipe("A corner of a room with a plant.", image, num_inference_steps=30).images[0]
 image_name = image_file.split('.')[0]
 
 image.save(f'outputs/{image_name}.png')
