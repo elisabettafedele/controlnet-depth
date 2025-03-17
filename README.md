@@ -10,7 +10,6 @@ pip install -r requirements.txt  # install requirements
 
 
 ## Run
-Clone the repository, create virtual environment and install the required packages as follows:
 ```bash
 python control-depth.py
 ```
